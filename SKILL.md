@@ -36,6 +36,22 @@ I want to operate Reddit, scan GEO and TechSEO subreddits every 30 minutes, auto
 | "To Feishu group" OR "chat:oc_xxx" | Feishu Notify | channel=feishu |
 | "No channel specified" | Default Channel | No channel parameter |
 
+### Workspace Inheritance
+
+**Important**: This Skill operates within the **calling Agent's Workspace**.
+
+| Calling Agent | Workspace Path | Files Created Here |
+|--------------|----------------|-------------------|
+| Main Agent | Current Agent's workspace | `memory/`, `HEARTBEAT.md`, etc. |
+| Work Agent (Discord) | `/Users/xxx/workspace-javis-discord/` | Relative to that workspace |
+
+**Path Rules**:
+- ✅ Use **relative paths**: `memory/cron-execution-state.json`
+- ✅ Use **workspace-relative**: `HEARTBEAT.md`, `SOUL.md`
+- ❌ Do NOT use absolute paths like `/Users/xxx/workspace/...`
+
+The Skill automatically places all files in the correct location based on which Agent invoked it.
+
 ### Channel Auto-Detection
 
 The Skill automatically detects which channel to use:
@@ -145,6 +161,8 @@ workspace/
 ```
 
 > All files auto-placed in `memory/` with standard naming. No manual path needed.
+>
+> **Note**: `workspace/` refers to the **calling Agent's workspace directory**, not a fixed absolute path.
 
 ## Auto-Configured CRON Tasks
 
@@ -340,6 +358,22 @@ The Skill automatically handles:
 ---
 
 ## Chinese Reference / 中文参考
+
+### 工作区继承规则
+
+**重要**: 本 Skill 在**调用它的 Agent 的工作区**中运行。
+
+| 调用 Agent | 工作区路径 | 文件创建位置 |
+|-----------|-----------|-------------|
+| Main Agent | 当前 Agent 的工作区 | `memory/`、`HEARTBEAT.md` 等 |
+| Work Agent (Discord) | `/Users/xxx/workspace-javis-discord/` | 相对于该工作区 |
+
+**路径规则**:
+- ✅ 使用**相对路径**: `memory/cron-execution-state.json`
+- ✅ 使用**工作区相对路径**: `HEARTBEAT.md`、`SOUL.md`
+- ❌ 不要使用绝对路径如 `/Users/xxx/workspace/...`
+
+本 Skill 根据调用它的 Agent 自动将所有文件放置在正确位置。
 
 ### 快速开始
 
