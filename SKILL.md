@@ -11,19 +11,67 @@ description: Auto-setup OpenClaw dual-engine (HEARTBEAT + CRON) automation syste
 
 ### Natural Language Usage
 
-Describe your needs like talking to a person:
+Describe your needs like talking to a person. The Skill will auto-translate to complete technical configuration.
 
+#### Example 1: System Monitoring
+**You say:**
 ```
-I want to check server CPU and memory every 30 minutes, generate health reports at 9 AM daily
+帮我搭个系统监控：
+- 每30分钟检查CPU、内存、磁盘
+- 每天9点生成健康报告
+- CPU超过80%、内存超过85%时告警
+- 通知发到飞书
 ```
 
+**Skill auto-configures:**
+- HEARTBEAT task: 每30分钟检查系统状态
+- CRON task: 每天09:00生成报告
+- State management: 11个时段状态追踪
+- Feishu notification: `channel=feishu`
+
+#### Example 2: Reddit Operations
+**You say:**
 ```
-I want to monitor competitor websites, check price changes every 30 minutes, send daily reports to Feishu at 9 AM
+我要做Reddit运营：
+- 每30分钟扫描r/TechSEO和r/GenEngineOptimization
+- 早上9点生成报告，晚上10点自动发帖
+- 飞书通知：chat:oc_ac50ef0887f1d1750a94a5aaecfdb959
 ```
 
+**Skill auto-configures:**
+- HEARTBEAT: Reddit热点扫描
+- CRON: 09:00报告 + 22:00发帖检查
+- Content calendar: 自动创建并管理
+- Anti-duplication: 防止重复发帖机制
+
+#### Example 3: Competitor Monitoring
+**You say:**
 ```
-I want to operate Reddit, scan GEO and TechSEO subreddits every 30 minutes, auto-post at 10 PM daily
+监控竞品价格：
+- 每30分钟检查竞品网站价格变化
+- 每周一9点生成周报
+- 价格变动超过10%立即告警
 ```
+
+**Skill auto-configures:**
+- HEARTBEAT: 价格监控
+- CRON: 每周一09:00周报
+- Alert system: 阈值触发通知
+- Data archive: 历史价格记录
+
+#### Example 4: Multi-Agent Routing
+**You say:**
+```
+设置多渠道运营：
+- 飞书消息用main agent处理
+- Discord消息用work agent处理
+- 两边都走双引擎监控
+```
+
+**Skill auto-configures:**
+- Bindings: Discord→work, Feishu→main
+- Separate workspaces: 各自独立工作区
+- Unified monitoring: 统一监控面板
 
 ### Auto-Translation
 
@@ -71,8 +119,10 @@ I want to build system monitoring:
 - Check CPU, memory, disk every 30 minutes
 - Generate daily report at 09:00
 - Alert thresholds: CPU>80%, Memory>85%, Disk>90%
-- Workspace: /Users/name/system-monitor
+- Feishu notify: chat:oc_xxx
 ```
+
+> Files auto-created in calling Agent's workspace. No manual path needed.
 
 **Config-Type (Advanced):**
 ```
@@ -101,8 +151,9 @@ I want to build Reddit operations:
 - Scan r/TechSEO and r/GenEngineOptimization every 30 min
 - Generate report at 09:00, auto-post at 22:00
 - Feishu notify: chat:oc_ac50ef0887f1d1750a94a5aaecfdb959
-- Workspace: /Users/name/reddit-ops
 ```
+
+> Files auto-created in calling Agent's workspace. No manual path needed.
 
 **Config-Type (Advanced):**
 ```
@@ -134,35 +185,53 @@ Self-Evolution:
 I want to build competitor monitoring:
 - Check competitor prices every 30 minutes
 - Generate weekly report on Monday 09:00
-- Workspace: /Users/name/competitor-monitor
 # No Feishu specified → Uses default channel
 ```
 
+> Files auto-created in calling Agent's workspace. No manual path needed.
+
 ## Directory Structure
 
-Auto-created standard directory structure:
+**Default Structure** (auto-created in calling Agent's workspace):
 
 ```
-workspace/
+workspace/                           # Calling Agent's workspace (auto-detected)
 ├── HEARTBEAT.md                     # HEARTBEAT instructions
 ├── memory/                          # Data storage
-│   ├── cron-execution-state.json    # State management
-│   ├── content-calendar.md          # Content calendar (if posting)
-│   ├── post-performance-log.md      # Performance logs
+│   ├── cron-execution-state.json    # State management (11 time slots)
+│   ├── content-calendar.md          # Content calendar (if posting enabled)
+│   ├── content-ideas.md             # Content ideas library
+│   ├── post-performance-log.md      # Performance tracking
+│   ├── YYYY-MM-DD.md                # Daily reports
 │   ├── performance-logs/            # Execution data
-│   ├── optimization-reports/        # Optimization reports
+│   ├── optimization-reports/        # Optimization records
 │   └── learning/                    # Learning archive
-│       ├── insights/                # Insights
-│       ├── hot-posts/              # Hot posts
-│       └── competitors/            # Competitor data
-├── SOUL.md                          # Agent persona
-├── AGENTS.md                        # Operations guide
-└── OPTIMIZATION.md                  # Optimization records
+│       ├── daily-reports/           # Daily learning summaries
+│       ├── insights/                # Strategy insights
+│       ├── hot-posts/               # Hot content archive
+│       └── competitors/             # Competitor intelligence
+├── SOUL.md                          # Agent persona (optional)
+├── AGENTS.md                        # Operations guide (optional)
+└── OPTIMIZATION.md                  # Optimization records (optional)
 ```
 
-> All files auto-placed in `memory/` with standard naming. No manual path needed.
->
-> **Note**: `workspace/` refers to the **calling Agent's workspace directory**, not a fixed absolute path.
+### Key Points
+
+✅ **Auto-Placement**: All files automatically created in correct locations  
+✅ **No Manual Path**: Don't specify paths, Skill handles it  
+✅ **Relative Paths**: Use `memory/xxx.md` in all commands  
+✅ **Workspace Inheritance**: Files go to calling Agent's workspace  
+
+### Multi-Agent Setup
+
+When using Multi-Agent Routing:
+
+| Agent | Files Created In | Example |
+|-------|-----------------|---------|
+| Main Agent | Main workspace | `workspace/memory/...` |
+| Work Agent (Discord) | Work workspace | `workspace-javis-discord/memory/...` |
+
+Each Agent maintains separate file structure in its own workspace.
 
 ## Auto-Configured CRON Tasks
 
@@ -377,12 +446,34 @@ The Skill automatically handles:
 
 ### 快速开始
 
-**自然语言用法：**
+#### 自然语言用法（推荐）
+
+**系统监控：**
 ```
-我要每30分钟检查服务器CPU和内存，每天9点生成健康报告
+帮我搭个系统监控：
+- 每30分钟检查CPU、内存、磁盘
+- 每天9点生成健康报告
+- CPU超过80%、内存超过85%时告警
+- 通知发到飞书
 ```
 
-**配置型用法：**
+**Reddit运营：**
+```
+我要做Reddit运营：
+- 每30分钟扫描r/TechSEO和r/GenEngineOptimization
+- 早上9点生成报告，晚上10点自动发帖
+- 飞书通知：chat:oc_ac50ef0887f1d1750a94a5aaecfdb959
+```
+
+**竞品监控：**
+```
+监控竞品价格：
+- 每30分钟检查竞品网站价格变化
+- 每周一9点生成周报
+- 价格变动超过10%立即告警
+```
+
+**配置型用法（高级）：**
 ```
 监控需求：
 - 每30分钟检查：CPU、内存、磁盘
@@ -396,6 +487,33 @@ The Skill automatically handles:
 - 飞书：chat:oc_xxx
 ```
 
+### 默认文件结构
+
+Skill自动在调用Agent的工作区创建：
+
+```
+workspace/                    # 调用Agent的工作区（自动识别）
+├── HEARTBEAT.md              # HEARTBEAT指令
+├── memory/                   # 数据存储
+│   ├── cron-execution-state.json    # 状态管理
+│   ├── content-calendar.md          # 内容日历
+│   ├── content-ideas.md             # 内容创意库
+│   ├── post-performance-log.md      # 表现追踪
+│   └── learning/                    # 学习归档
+│       ├── daily-reports/           # 每日学习报告
+│       ├── insights/                # 策略洞察
+│       ├── hot-posts/               # 热点内容
+│       └── competitors/             # 竞品情报
+├── SOUL.md                   # Agent人设（可选）
+├── AGENTS.md                 # 运营指南（可选）
+└── OPTIMIZATION.md           # 优化记录（可选）
+```
+
+✅ **自动创建**：所有文件自动放置在正确位置  
+✅ **无需指定路径**：不用告诉Skill放哪里，自动处理  
+✅ **使用相对路径**：所有操作使用 `memory/xxx.md`  
+✅ **多Agent支持**：每个Agent在自己的workspace中管理文件  
+
 ### 通道自动识别
 
 | 输入 | 识别结果 | 命令 |
@@ -405,11 +523,11 @@ The Skill automatically handles:
 
 ---
 
-**Essence**: Turn "manual copy-paste configuration" into "conversational auto-setup"
+**核心本质**：把"手动复制粘贴配置"变成"对话式自动搭建"
 
-Just say:
-- "I want to check XX every 30 min"
-- "I want to do XX at 9 AM daily"
-- "I want to monitor XX and notify Feishu"
+直接说：
+- "我想每30分钟检查XX"
+- "我想每天9点做XX"
+- "我想监控XX并通知飞书"
 
-Skill auto-translates to complete technical configuration.
+Skill自动翻译成完整的技术配置。
